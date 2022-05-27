@@ -10,9 +10,10 @@ fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+//#1 use the pug engine and render the index pug file on the root get requests 
+app.set("view engine","pug");
 app.route('/').get((req, res) => {
-  res.render('Load your view here');
+  res.render("pug/index");
 });
 
 const PORT = process.env.PORT || 3000;
