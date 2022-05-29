@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 //#1 use the pug engine and render the index pug file on the root get requests 
 app.set("view engine","pug");
 app.route('/').get((req, res) => {
+  console.log("loading new page")
   res.render("pug/index",{title:"Hello", message:"Please login"});
 });
 //#2 use express session and passport to handle login and sessions
