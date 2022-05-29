@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 //#1 use the pug engine and render the index pug file on the root get requests 
 app.set("view engine","pug");
 app.route('/').get((req, res) => {
-  res.render("pug/index");
+  res.render("pug/index",{title:"Hello", message:"Please login"});
 });
 
 const PORT = process.env.PORT || 3000;
