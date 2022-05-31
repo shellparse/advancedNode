@@ -48,7 +48,7 @@ passport.use(new LocalStrategy(
 ));
   //#5 setting up log in form post router
 app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,res)=>{
-  res.redirect("pug/profile",req.user);
+  res.redirect("pug/profile",{username:req.user.username});
   });
 
 }).catch((e) => {
