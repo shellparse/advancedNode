@@ -56,7 +56,16 @@ app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,r
     res.render('pug/index', { title: e, message: 'Unable to login' });
   });
 });
-
+//#6 checking if user is authenticatede when visiting /profile if not redirects to root 
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/');
+};
+app.get("/profile",ensureAuthenticated,(req,res)=>{
+res.render("pug/profile")
+})
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
