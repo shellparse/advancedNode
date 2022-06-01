@@ -25,7 +25,28 @@ myDB(async(client)=>{
   app.route('/').get((req, res) => {
     res.render("pug/index",{title:"Connected to database", message:"Please login",showLogin: true});
   });
-    //#3 serialization of users using the user id from the database
+    
+  //#5 setting up log in form post router
+app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,res)=>{
+  res.redirect("pug/profile",{username:req.user.username});
+  });
+
+  app.get("/profile",ensureAuthenticated,(req,res)=>{
+    res.render("pug/profile")
+    })
+    //#7 logging out the user 
+    app.get("/logout",(req,res)=>{
+      req.logout((err)=>err?next(err):console.log("hello world"));
+      res.redirect("/")
+    })
+    // the commont way of handling page not found 
+    app.use((req, res, next) => {
+      res.status(404)
+        .type('text')
+        .send('Not Found 404 -_-');
+    });
+
+//#3 serialization of users using the user id from the database
 passport.serializeUser((user,done)=>{
   done(null,user._id);
 })
@@ -46,27 +67,6 @@ passport.use(new LocalStrategy(
     });
   }
 ));
-  //#5 setting up log in form post router
-app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,res)=>{
-  res.redirect("pug/profile",{username:req.user.username});
-  });
-
-  app.get("/profile",ensureAuthenticated,(req,res)=>{
-    res.render("pug/profile")
-    })
-    //#7 logging out the user 
-    app.get("/logout",(req,res)=>{
-      req.logout();
-      res.redirect("/")
-    })
-    // the commont way of handling page not found 
-    app.use((req, res, next) => {
-      res.status(404)
-        .type('text')
-        .send('Not Found 404 -_-');
-    });
-
-
 
 
 }).catch((e) => {
