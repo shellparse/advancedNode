@@ -51,6 +51,24 @@ app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,r
   res.redirect("pug/profile",{username:req.user.username});
   });
 
+  app.get("/profile",ensureAuthenticated,(req,res)=>{
+    res.render("pug/profile")
+    })
+    //#7 logging out the user 
+    app.get("/logout",(req,res)=>{
+      req.logout();
+      res.redirect("/")
+    })
+    // the commont way of handling page not found 
+    app.use((req, res, next) => {
+      res.status(404)
+        .type('text')
+        .send('Not Found 404 -_-');
+    });
+
+
+
+
 }).catch((e) => {
   app.route('/').get((req, res) => {
     res.render('pug/index', { title: e, message: 'Unable to login' });
@@ -63,9 +81,7 @@ function ensureAuthenticated(req, res, next) {
   }
   res.redirect('/');
 };
-app.get("/profile",ensureAuthenticated,(req,res)=>{
-res.render("pug/profile")
-})
+//#6
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
