@@ -23,9 +23,31 @@ app.use(passport.session());
 myDB(async(client)=>{
   const myDataBase = await client.db("test").collection("users");
   app.route('/').get((req, res) => {
-    res.render("pug/index",{title:"Connected to database", message:"Please login",showLogin: true});
+    res.render("pug/index",{title:"Connected to database", message:"Please login",showLogin: true ,showRegistration:true});
   });
     
+  //#8 signup new user
+app.post("/register",async(req,res,next)=>{
+    myDataBase.findOne({username:req.body.username},(err,doc)=>{
+      if (err){
+        next(err);
+      }else if(doc){
+        res.redirect("/");
+      }else{
+        myDataBase.insertOne({username:req.body.username,password:req.body.password},(err,doc)=>{
+          if(err){
+            res.redirect("/");
+          }else{
+            console.log(doc)
+            next(null,doc)
+          }
+        }
+       )
+      }
+    })
+  },passport.authenticate('local',{failureRedirect:"/"}),(req,res,next)=>{
+    res.redirect("/profile")
+  })
   //#5 setting up log in form post router
 app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,res)=>{
   res.redirect("pug/profile",{username:req.user.username});
