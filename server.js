@@ -27,7 +27,7 @@ myDB(async(client)=>{
   });
     
   //#8 signup new user
-app.post("/register",async(req,res,next)=>{
+app.route("/register").post(async(req,res,next)=>{
     myDataBase.findOne({username:req.body.username},(err,doc)=>{
       if (err){
         next(err);
