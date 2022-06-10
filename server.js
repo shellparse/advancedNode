@@ -8,6 +8,7 @@ const passport = require("passport");
 const ObjectID = require('mongodb').ObjectID;
 const LocalStrategy = require('passport-local');
 const app = express();
+const bcrypt = require("bcrypt");
 
 fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
@@ -28,13 +29,14 @@ myDB(async(client)=>{
     
   //#8 signup new user
 app.route("/register").post(async(req,res,next)=>{
+    let hash = bcrypt.hashSync(req.body.password,12);
     myDataBase.findOne({username:req.body.username},(err,doc)=>{
       if (err){
         next(err);
       }else if(doc){
         res.redirect("/");
       }else{
-        myDataBase.insertOne({username:req.body.username,password:req.body.password},(err,doc)=>{
+        myDataBase.insertOne({username:req.body.username,password:hash},(err,doc)=>{
           if(err){
             res.redirect("/");
           }else{
@@ -84,7 +86,7 @@ passport.use(new LocalStrategy(
       console.log('User '+ username +' attempted to log in.');
       if (err) { return done(err); }
       if (!user) { return done(null, false); }
-      if (password !== user.password) { return done(null, false); }
+      if (!bcrypt.compareSync(password, user.password)) { return done(null, false); }
       return done(null, user);
     });
   }
