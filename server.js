@@ -1,4 +1,6 @@
 'use strict';
+const routes = require('./routes.js');
+const auth = require("./auth");
 require('dotenv').config();
 const express = require('express');
 const myDB = require('./connection');
@@ -27,42 +29,6 @@ myDB(async(client)=>{
     res.render("pug/index",{title:"Connected to database", message:"Please login",showLogin: true ,showRegistration:true});
   });
     
-  //#8 signup new user
-app.route("/register").post(async(req,res,next)=>{
-    let hash = bcrypt.hashSync(req.body.password,12);
-    myDataBase.findOne({username:req.body.username},(err,doc)=>{
-      if (err){
-        next(err);
-      }else if(doc){
-        res.redirect("/");
-      }else{
-        myDataBase.insertOne({username:req.body.username,password:hash},(err,doc)=>{
-          if(err){
-            res.redirect("/");
-          }else{
-            console.log(doc)
-            next(null,doc)
-          }
-        }
-       )
-      }
-    })
-  },passport.authenticate('local',{failureRedirect:"/"}),(req,res,next)=>{
-    res.redirect("/profile")
-  })
-  //#5 setting up log in form post router
-app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,res)=>{
-  res.redirect("pug/profile",{username:req.user.username});
-  });
-
-  app.get("/profile",ensureAuthenticated,(req,res)=>{
-    res.render("pug/profile")
-    })
-    //#7 logging out the user 
-    app.get("/logout",(req,res)=>{
-      req.logout((err)=>err?next(err):console.log("hello world"));
-      res.redirect("/")
-    })
     // the commont way of handling page not found 
     app.use((req, res, next) => {
       res.status(404)
@@ -98,14 +64,7 @@ passport.use(new LocalStrategy(
     res.render('pug/index', { title: e, message: 'Unable to login' });
   });
 });
-//#6 checking if user is authenticatede when visiting /profile if not redirects to root 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/');
-};
-//#6
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
