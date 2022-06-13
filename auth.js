@@ -16,7 +16,7 @@ passport.serializeUser((user,done)=>{
   });
   passport.use(new GitHubStrategy({clientID:process.env.GITHUB_CLIENT_ID,
     clientSecret:process.env.GITHUB_CLIENT_SECRET,
-    callbackURL:`${homeUrl}auth/github/callback`},
+    callbackURL:`https://advancenode.azurewebsites.net/auth/github/callback`},
   (accessToken, refreshToken, profile, cb)=>{
     console.log(profile);
      myDataBase.findOneAndUpdate({id:profile.id},{
