@@ -30,6 +30,7 @@ myDB(async(client)=>{
   auth(app,myDataBase);
   io.on('connection', socket => {
     currentUsers++;
+    io.emit('user count', currentUsers)
     console.log(socket);
   });
     // the common way of handling page not found 
