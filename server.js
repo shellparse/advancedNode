@@ -8,7 +8,6 @@ const fccTesting = require('./freeCodeCamp/fcctesting.js');
 const session =require("express-session");
 const passport = require("passport");
 const app = express();
-
 fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
@@ -26,6 +25,7 @@ myDB(async(client)=>{
     res.render("pug/index",{title:"Connected to database", message:"Please login",showLogin: true ,showRegistration:true,showSocialAuth:true});
   });
   routes(app, myDataBase);
+  console.log(homeUrl)
   auth(app,myDataBase);
     // the common way of handling page not found 
     app.use((req, res, next) => {
