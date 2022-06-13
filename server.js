@@ -23,11 +23,11 @@ app.use(passport.session());
 myDB(async(client)=>{
   const myDataBase = await client.db("test").collection("users");
   app.route('/').get((req, res) => {
-    res.render("pug/index",{title:"Connected to database", message:"Please login",showLogin: true ,showRegistration:true});
+    res.render("pug/index",{title:"Connected to database", message:"Please login",showLogin: true ,showRegistration:true,showSocialAuth:true});
   });
   routes(app, myDataBase);
   auth(app,myDataBase);
-    // the commont way of handling page not found 
+    // the common way of handling page not found 
     app.use((req, res, next) => {
       res.status(404)
         .type('text')

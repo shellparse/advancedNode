@@ -1,7 +1,9 @@
+const passport = require("passport");
+
 module.exports = function (app, myDataBase) {
 
       //#8 signup new user
-app.route("/register").post(async(req,res,next)=>{
+  app.route("/register").post(async(req,res,next)=>{
     let hash = bcrypt.hashSync(req.body.password,12);
     myDataBase.findOne({username:req.body.username},(err,doc)=>{
       if (err){
@@ -22,26 +24,33 @@ app.route("/register").post(async(req,res,next)=>{
     })
   },passport.authenticate('local',{failureRedirect:"/"}),(req,res,next)=>{
     res.redirect("/profile")
-  })
+    })
     //#5 setting up log in form post router
-app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,res)=>{
+  app.post("/login",passport.authenticate("local",{ failureRedirect: '/' }),(req,res)=>{
     res.redirect("pug/profile",{username:req.user.username});
     });
   
-    app.get("/profile",ensureAuthenticated,(req,res)=>{
+  app.get("/profile",ensureAuthenticated,(req,res)=>{
       res.render("pug/profile")
       })
       //#7 logging out the user 
-      app.get("/logout",(req,res)=>{
+  app.get("/logout",(req,res)=>{
         req.logout((err)=>err?next(err):console.log("hello world"));
         res.redirect("/")
-      })
+    })
 
-      function ensureAuthenticated(req, res, next) {
+  function ensureAuthenticated(req, res, next) {
         if (req.isAuthenticated()) {
           return next();
         }
         res.redirect('/');
-      };
+  };
 
+  app.get("/auth/github",(req,res)=>{
+    passport.authenticate("github");
+  })
+  app.get("auth/github/callback",(req,res)=>{
+    passport.authenticate("github",{failureRedirect:true});
+    res.redirect("/profile");
+    })
 }
