@@ -10,6 +10,13 @@ const passport = require("passport");
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const passportSocketIo=require("passport.socketio");
+const MongoStore=require("connect-mongo")(session);
+const URI = process.env.MONGO_URI;
+const store = new MongoStore({ url: URI });
+
+const cookieParser=require("cookie-parser");
+
 fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
