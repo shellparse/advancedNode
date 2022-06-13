@@ -7,4 +7,7 @@ $(document).ready(function () {
     return false; // prevent form submit from refreshing page
   });
   let socket = io();
+  socket.on('user count', function(data) {
+    console.log(data);
+  });
 });
