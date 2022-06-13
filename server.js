@@ -8,6 +8,8 @@ const fccTesting = require('./freeCodeCamp/fcctesting.js');
 const session =require("express-session");
 const passport = require("passport");
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
@@ -25,8 +27,10 @@ myDB(async(client)=>{
     res.render("pug/index",{title:"Connected to database", message:"Please login",showLogin: true ,showRegistration:true,showSocialAuth:true});
   });
   routes(app, myDataBase);
-  console.log(homeUrl)
   auth(app,myDataBase);
+  io.on('connection', socket => {
+    console.log('A user has connected');
+  });
     // the common way of handling page not found 
     app.use((req, res, next) => {
       res.status(404)
@@ -40,6 +44,6 @@ myDB(async(client)=>{
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log('Listening on port ' + PORT);
 });
