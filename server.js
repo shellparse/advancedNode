@@ -32,6 +32,11 @@ myDB(async(client)=>{
     currentUsers++;
     io.emit('user count', currentUsers)
     console.log(socket);
+    socket.on('disconnect', () => {
+      /*anything you want to do on disconnect*/
+      currentUsers--
+      io.emit('user count', currentUsers)
+    });
   });
     // the common way of handling page not found 
     app.use((req, res, next) => {
