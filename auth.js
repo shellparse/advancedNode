@@ -14,7 +14,6 @@ passport.serializeUser((user,done)=>{
       done(null,doc)
     })
   });
-  console.log(homeUrl)
   passport.use(new GitHubStrategy({clientID:process.env.GITHUB_CLIENT_ID,
     clientSecret:process.env.GITHUB_CLIENT_SECRET,
     callbackURL:`${homeUrl}auth/github/callback`},
