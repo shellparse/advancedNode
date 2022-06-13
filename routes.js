@@ -46,11 +46,11 @@ module.exports = function (app, myDataBase) {
         res.redirect('/');
   };
 
-  app.get("/auth/github",(req,res)=>{
-    passport.authenticate("github");
-  })
-  app.get("auth/github/callback",(req,res)=>{
-    passport.authenticate("github",{failureRedirect:true});
-    res.redirect("/profile");
-    })
+  app.route('/auth/github')
+          .get(passport.authenticate('github'));
+          
+          app.route('/auth/github/callback')
+          .get(passport.authenticate('github', { failureRedirect: '/' }), (req,res) => {
+              res.redirect('/profile');
+          });
 }
