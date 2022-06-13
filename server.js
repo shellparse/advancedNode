@@ -29,7 +29,8 @@ myDB(async(client)=>{
   routes(app, myDataBase);
   auth(app,myDataBase);
   io.on('connection', socket => {
-    console.log('A user has connected');
+    currentUsers++;
+    console.log(socket);
   });
     // the common way of handling page not found 
     app.use((req, res, next) => {
@@ -44,6 +45,7 @@ myDB(async(client)=>{
 });
 
 const PORT = process.env.PORT || 3000;
+let currentUsers = 0;
 http.listen(PORT, () => {
   console.log('Listening on port ' + PORT);
 });
