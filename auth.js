@@ -1,6 +1,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const LocalStrategy = require('passport-local');
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 module.exports = function (app, myDataBase) {
 //#3 serialization of users using the user id from the database
 passport.serializeUser((user,done)=>{
