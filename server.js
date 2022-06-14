@@ -11,9 +11,9 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const passportSocketIo=require("passport.socketio");
-const MongoStore=require("connect-mongo")(session);
+const MongoStore=require("connect-mongo");
 const URI = process.env.MONGO_URI;
-const store = new MongoStore({ url: URI });
+const store =  MongoStore.create({ url: URI });
 
 const cookieParser=require("cookie-parser");
 function onAuthorizeSuccess(data, accept) {
