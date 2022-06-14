@@ -13,7 +13,7 @@ const io = require('socket.io')(http);
 const passportSocketIo=require("passport.socketio");
 const MongoStore=require("connect-mongo");
 const URI = process.env.MONGO_URI;
-const store =  MongoStore.create({ url: URI });
+const store =  MongoStore.create({ mongoUrl: URI });
 
 const cookieParser=require("cookie-parser");
 function onAuthorizeSuccess(data, accept) {
