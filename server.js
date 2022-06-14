@@ -11,8 +11,7 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const passportSocketIo=require("passport.socketio");
-const MongoConnect=require("connect-mongo");
-const MongoStore= new MongoConnect(session);
+const MongoStore=require("connect-mongo")(session);
 const URI = process.env.MONGO_URI;
 const store = new MongoStore({ url: URI });
 
@@ -59,12 +58,20 @@ myDB(async(client)=>{
   io.on('connection', socket => {
     console.log('user ' + socket.request.user.name + ' connected');
     currentUsers++;
-    io.emit('user count', currentUsers)
+    io.emit('user', {
+      name: socket.request.user.name,
+      currentUsers,
+      connected: true
+    });
     console.log(socket);
     socket.on('disconnect', () => {
       /*anything you want to do on disconnect*/
       currentUsers--
-      io.emit('user count', currentUsers)
+      io.emit('user', {
+        name: socket.request.user.name,
+        currentUsers,
+        connected: true
+      });
     });
   });
     // the common way of handling page not found 
