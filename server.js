@@ -11,7 +11,8 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const passportSocketIo=require("passport.socketio");
-const MongoStore=require("connect-mongo")(session);
+const MongoConnect=require("connect-mongo");
+const MongoStore= new MongoConnect(session);
 const URI = process.env.MONGO_URI;
 const store = new MongoStore({ url: URI });
 
