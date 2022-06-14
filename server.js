@@ -63,7 +63,9 @@ myDB(async(client)=>{
       currentUsers,
       connected: true
     });
-    console.log(socket);
+    socket.on("chat message",(message)=>{
+      io.emit("chat message",message)
+    })    
     socket.on('disconnect', () => {
       /*anything you want to do on disconnect*/
       currentUsers--
